@@ -5,12 +5,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         const client = await clientPromise;
         const db = client.db("volley");
-        const movies = await db
-            .collection("sets")
-            .find({})
-            .sort({ metacritic: -1 })
-            .toArray();
-        res.json(movies);
+        const newSet = await db.collection("sets").insertOne(req);
+
+        res.json(newSet);
     } catch (e) {
         console.error(e);
     }

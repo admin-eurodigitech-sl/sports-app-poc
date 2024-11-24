@@ -38,7 +38,7 @@ const Login: React.FC<UsersProps> = ({ users }) => {
     
           Cookies.set('user', allowedUser.name, { expires: 1 })
     
-          router.push('/currentMatch')
+          router.push('/currentSet')
         } else {
           // Handle errors
         }
