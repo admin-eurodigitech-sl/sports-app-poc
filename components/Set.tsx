@@ -22,6 +22,8 @@ export const Set = ({ set }: SetProps) => {
     const LoadWinner = (winner: string, team: string) => {
         return winner === team ? <strong style={{color: "red"}}>{team}</strong> : <span>{team}</span>
     }
+
+    
     return (
         <Grid2 container spacing={2} justifyContent="center" >
             <Grid2 size={{ xs: 12, sm: 4 }} justifyContent="center" textAlign="center">
@@ -34,6 +36,27 @@ export const Set = ({ set }: SetProps) => {
                     <h3>{set.isFinished ? "FINISHED" : "PLAYING"}</h3>
                 </Paper>
             </Grid2>
+            {
+                !set.isFinished && 
+                <Grid2 size={{ xs: 12, sm: 4 }} justifyContent="center" textAlign="center">
+                    <Paper>
+                        <Button>
+                            +1 {set.team1}
+                        </Button>
+                        <Button>
+                            +1 {set.team2}
+                        </Button>
+                    </Paper>
+                </Grid2>
+            }
+            {
+                !set.isFinished && 
+                <Grid2 size={{ xs: 12, sm: 4 }} justifyContent="center" textAlign="center">
+                    <Button variant="contained">
+                        End game
+                    </Button>
+                </Grid2>
+            }
         </Grid2>
 
     )

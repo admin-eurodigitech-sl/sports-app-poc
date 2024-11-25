@@ -12,8 +12,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const id = JSON.parse(JSON.stringify(req.query.id));
 
   switch (req.method) {
+    case "POST": 
+      let { score, winner } = req.body;
+      let createUpdateObject: any = {}
+
+      if (score) { createUpdateObject["score"] = score  }
+      if (winner) { createUpdateObject["winner"] = winner  }
+
+      let getSetAndUpdate = await collection.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: createUpdateObject}
+      );
+
     case "GET":
-      const currentSet = await collection
+      let currentSet = await collection
       .findOne({ _id: new ObjectId(id) })
       res.json({ status: 200, data: currentSet });
       break;
