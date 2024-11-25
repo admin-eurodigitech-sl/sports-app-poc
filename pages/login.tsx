@@ -1,12 +1,9 @@
 import { FormEvent } from "react";
-import clientPromise from "../lib/mongodb";
 import { GetServerSideProps } from 'next';
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-
-
 
 interface User {
    _id: string;
@@ -38,7 +35,7 @@ const Login: React.FC<UsersProps> = ({ users }) => {
     
           Cookies.set('user', allowedUser.name, { expires: 1 })
     
-          router.push('/currentSet')
+          router.push('/sets')
         } else {
           // Handle errors
         }
@@ -70,16 +67,17 @@ export default Login;
 
 export const getServerSideProps: GetServerSideProps = async () => {
    try {
-       const client = await clientPromise;
-       const db = client.db("volley");
-       const users = await db
-           .collection("users")
-           .find({})
-           .sort({ metacritic: -1 })
-           .toArray();
+
+      let res = await fetch(`${process.env.API_ENDPOINT}/api/users`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      let users = await res.json();
 
        return {
-           props: { users: JSON.parse(JSON.stringify(users)) },
+           props: { users: JSON.parse(JSON.stringify(users.data)) },
        };
    } catch (e) {
        console.error(e);
