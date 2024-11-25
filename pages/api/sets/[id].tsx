@@ -9,14 +9,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   console.log(req.query);
 
-  const id = JSON.stringify(req.query.id);
+  const id = JSON.parse(JSON.stringify(req.query.id));
 
   switch (req.method) {
     case "GET":
       const currentSet = await collection
-      .find({ _id: new ObjectId(id)})
-      .sort({ metacritic: -1 })
-      .toArray();
+      .findOne({ _id: new ObjectId(id) })
       res.json({ status: 200, data: currentSet });
       break;
   }

@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router'
-import Button from '@mui/material/Button';
-import Paper from "@mui/material/Paper";
+
+import { Set } from "../../components/Set";
 
 interface Set {
    _id: string;
@@ -22,26 +22,14 @@ interface SetsProps {
 const Sets: React.FC<SetsProps> = ({ sets }) => {
     const router = useRouter();
 
-    const LoadWinner = (winner: string, team: string) => {
-        return winner === team ? <strong style={{color: "red"}}>{team}</strong> : <span>{team}</span>
-    }
-
    return (
     <div>
         {
             sets.map((set, index) => {
                 return (
-                    <Paper key={index}>
-                        <h2>
-                            {LoadWinner(set.winner, set.team1)} - vs - {LoadWinner(set.winner, set.team2)}
-                        </h2>
-                        <h1>{set.score}</h1>
-                        <h3>{set.createdAt}</h3>
-                        <h3>{set.isFinished ? "FINISHED" : "PLAYING"}</h3>
-                        <Button variant="contained" color="primary" value="Referee" type="button" onClick={() => router.push(`sets/${set._id}`)}>
-                                Details
-                        </Button>
-                    </Paper>
+                    <div onClick={()=> router.push(`/sets/${set._id}`)}>
+                        <Set set={set} key={index}/>
+                    </div>
                 )
             })
         }
