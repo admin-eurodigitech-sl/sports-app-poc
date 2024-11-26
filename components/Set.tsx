@@ -2,7 +2,7 @@ import { parseCreatedAtToDate } from "../lib/helper";
 import Button from '@mui/material/Button';
 import Paper from "@mui/material/Paper";
 import Grid2 from '@mui/material/Grid2';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Set {
     _id: string;

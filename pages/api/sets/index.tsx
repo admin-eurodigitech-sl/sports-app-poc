@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case "POST":
       let bodyObject = JSON.parse(req.body);
       let mySet = await collection.insertOne(bodyObject);
-      res.json(mySet);
+      res.json({ status: 200, data: mySet });
       break;
     case "GET":
       const allSets = await collection.find({}).toArray();

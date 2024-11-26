@@ -1,5 +1,8 @@
 import { GetServerSideProps } from 'next';
 import { Set } from "../../components/Set";
+import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
+import { useEffect } from 'react';
 
 interface Set {
    _id: string;
@@ -18,6 +21,13 @@ interface SetsProps {
 
 
 const Sets: React.FC<SetsProps> = ({ set }) => {
+    const router = useRouter();
+
+    useEffect(() => {
+        const user = Cookies.get('user');
+  
+        !user && router.push('/');
+    }, [])
 
    return (
     <div>

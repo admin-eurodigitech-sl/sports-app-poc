@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const team2Score = parseInt(team2ScoreString);
 
       if (score) { createUpdateObject["score"] = score  }
-      if ((team1Score >= 25 || team2Score >= 25) && ((team1Score - team2Score) === 2 || (team2Score - team1Score) === 2)) {
+      if ((team1Score >= 25 || team2Score >= 25) && ((team1Score - team2Score) >= 2 || (team2Score - team1Score) >= 2)) {
         createUpdateObject["winner"] = team1Score > team2Score ? team1 : team2;
         createUpdateObject["isFinished"] = true
       }

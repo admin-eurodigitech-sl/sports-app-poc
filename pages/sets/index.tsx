@@ -1,7 +1,10 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router'
-
+import Cookies from 'js-cookie'
+import { useEffect, useState } from 'react';
 import { Set } from "../../components/Set";
+import Grid2 from '@mui/material/Grid2';
+import Button from '@mui/material/Button';
 
 interface Set {
    _id: string;
@@ -13,27 +16,93 @@ interface Set {
     createdAt: string;
 }
 
-
 interface SetsProps {
     sets: Set[];
 }
 
-
 const Sets: React.FC<SetsProps> = ({ sets }) => {
+    const [setsData, setDataSets] = useState(sets);
     const router = useRouter();
 
-    
+    useEffect(() => {
+        const user = Cookies.get('user');
+  
+        !user && router.push('/');
+    }, [])
+
+    const currentSet = setsData.filter((set) => !set.isFinished);
+    const isSetAlreadyInProgress = currentSet.length >= 1;
+
+    const createGameHandler = async () => {
+        await fetch(`/api/sets`,
+            {
+              body: JSON.stringify({
+                isFinished: false,
+                team1:  "Titanes",
+                team2: "Aldeanos",
+                score: "0-0",
+                winner: "",
+                createdAt: new Date().toString()
+              }),
+              method: 'POST'
+            }
+          );
+
+        const resGet = await fetch(`/api/sets`);
+        
+        const data = (await resGet.json()).data;
+
+        setDataSets(data);
+    }
 
    return (
     <div>
+        <div>
+            <Grid2 container spacing={2}  justifyContent="center">
+                <Grid2 justifyContent="center" textAlign="center">
+                    <h1>Current Set</h1>
+
+                    {
+                        !isSetAlreadyInProgress && 
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            onClick={createGameHandler}
+                        >
+                            New Set
+                        </Button>
+                    }
+                </Grid2>
+            </Grid2>
+            {
+                isSetAlreadyInProgress && currentSet
+                    .map((set, index) => {
+                        return (
+                            <div onClick={()=> router.push(`/sets/${set._id}`)} key={`currentSet-${index}`}>
+                                <Set set={set} key={`currentSet-${index}`} isDetails={false}/>
+                            </div>
+                        )
+                    })
+            }
+
+        </div>
+
+        <Grid2 container spacing={2}  justifyContent="center">
+                <Grid2 justifyContent="center" textAlign="center">
+                    <h1>Historical Sets</h1>
+                </Grid2>
+        </Grid2>
         {
-            sets.map((set, index) => {
-                return (
-                    <div onClick={()=> router.push(`/sets/${set._id}`)}>
-                        <Set set={set} key={index} isDetails={false}/>
-                    </div>
-                )
-            })
+            setsData
+                .filter((set) => set.isFinished)
+                .map((set, index) => {
+                    return (
+                        <div onClick={()=> router.push(`/sets/${set._id}`)} key={`historySet-${index}`}>
+                            <Set set={set} key={`historySet-${index}`} isDetails={false}/>
+                        </div>
+                    )
+                })
         }
     </div>
    );

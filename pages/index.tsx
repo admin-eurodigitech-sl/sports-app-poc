@@ -19,9 +19,10 @@ interface UsersProps {
 
 const Login: React.FC<UsersProps> = ({ users }) => {
     const router = useRouter()
-    const user = Cookies.get('user');
 
     useEffect(() => {
+      const user = Cookies.get('user');
+
       user && router.push('/sets')
     }, [])
 
