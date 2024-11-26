@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import Paper from "@mui/material/Paper";
 import Grid2 from '@mui/material/Grid2';
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 interface Set {
     _id: string;
@@ -21,9 +22,20 @@ interface Set {
 
 export const Set = ({ set, isDetails }: SetProps) => {
     const [dataSetState, setDataSetState] = useState(set);
+    const router = useRouter();
 
     const LoadWinner = (winner: string, team: string) => {
         return winner === team ? <strong style={{color: "red"}}>{team}</strong> : <span>{team}</span>
+    }
+
+    const deleteSet = async (dataSetState: Set) => {
+        await fetch(`/api/sets/${dataSetState._id}`,
+            {
+              method: 'DELETE'
+            }
+        );
+
+        router.push('/sets')
     }
 
     const updateScore = async (team: string) => {
@@ -53,6 +65,15 @@ export const Set = ({ set, isDetails }: SetProps) => {
 
     return (
         <Grid2 container spacing={2} justifyContent="center" >
+            {
+                isDetails && !dataSetState.isFinished &&
+                <Grid2 justifyContent="center" textAlign="center"> 
+                    <Button color="error" onClick={async () => await deleteSet(dataSetState)}>
+                        Delete Set
+                    </Button> 
+                </Grid2>
+            }
+
             <Grid2 size={{ xs: 12, sm: 4 }} justifyContent="center" textAlign="center">
                 <Paper>
                     <h2>
@@ -65,8 +86,8 @@ export const Set = ({ set, isDetails }: SetProps) => {
             </Grid2>
             {
                 isDetails && !dataSetState.isFinished && 
-                <Grid2 size={{ xs: 12, sm: 4 }} spacing={2} textAlign="center">
-                    <Grid2 textAlign="center"> 
+                <Grid2 size={{ xs: 12, sm: 4 }} container spacing={2} justifyContent="center" textAlign="center">
+                    <Grid2 justifyContent="center" textAlign="center"> 
                         <Button onClick={async () => await updateScore("team1")}>
                             +1 {dataSetState.team1}
                         </Button>

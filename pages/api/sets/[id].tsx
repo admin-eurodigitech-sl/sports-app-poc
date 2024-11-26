@@ -37,5 +37,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .findOne({ _id: new ObjectId(id) })
       res.json({ status: 200, data: currentSet });
       break;
+
+    case "DELETE":
+      await collection.deleteOne({ _id: new ObjectId(id) })
+
+      res.json({ status: 200 });
   }
 }
