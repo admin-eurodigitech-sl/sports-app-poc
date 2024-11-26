@@ -28,17 +28,9 @@ const Login: React.FC<UsersProps> = ({ users }) => {
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-
-     
         const formData = new FormData(event.currentTarget)
-        console.log(formData)
         const name = formData.get('name');
-        console.log(users)
-        console.log(name)
-        const allowedUser = users.find((element) => element.name === name);
-
-        console.log(allowedUser)
-    
+        const allowedUser = users.find((element) => element.name === name);    
         if (name && allowedUser) {
     
           Cookies.set('user', allowedUser.name, { expires: 1 })

@@ -2,7 +2,7 @@ import { parseCreatedAtToDate } from "../lib/helper";
 import Button from '@mui/material/Button';
 import Paper from "@mui/material/Paper";
 import Grid2 from '@mui/material/Grid2';
-
+import { useEffect, useState } from "react";
 
 interface Set {
     _id: string;
@@ -16,48 +16,66 @@ interface Set {
 
  interface SetProps {
     set: Set;
+    isDetails: boolean;
 }
 
-export const Set = ({ set }: SetProps) => {
+export const Set = ({ set, isDetails }: SetProps) => {
+    const [dataSetState, setDataSetState] = useState(set);
+
     const LoadWinner = (winner: string, team: string) => {
         return winner === team ? <strong style={{color: "red"}}>{team}</strong> : <span>{team}</span>
     }
 
+    const updateScore = async (team: string) => {
+        let [team1Score, team2Score] = dataSetState.score.split('-');
+
+        if (team === "team1") team1Score = `${parseInt(team1Score) + 1}`;
+        if (team === "team2") team2Score = `${parseInt(team2Score) + 1}`;
+
+        const data = {
+            ...dataSetState,
+            score: `${team1Score}-${team2Score}`
+        }
+
+        if (data.score !== "0-0") {
+            const res = await fetch(`/api/sets/${dataSetState._id}`,
+                {
+                  body: JSON.stringify(data),
+                  method: 'POST'
+                }
+              );
     
+            const updatedData = (await res.json()).data;
+            console.log(updatedData);
+            setDataSetState(updatedData);
+        }
+    }
+
     return (
         <Grid2 container spacing={2} justifyContent="center" >
             <Grid2 size={{ xs: 12, sm: 4 }} justifyContent="center" textAlign="center">
                 <Paper>
                     <h2>
-                        {LoadWinner(set.winner, set.team1)} - vs - {LoadWinner(set.winner, set.team2)}
+                        {LoadWinner(dataSetState.winner, dataSetState.team1)} - vs - {LoadWinner(dataSetState.winner, dataSetState.team2)}
                     </h2>
-                    <h1>{set.score}</h1>
-                    <h3>{parseCreatedAtToDate(set.createdAt)}</h3>
-                    <h3>{set.isFinished ? "FINISHED" : "PLAYING"}</h3>
+                    <h1>{dataSetState.score}</h1>
+                    <h3>{parseCreatedAtToDate(dataSetState.createdAt)}</h3>
+                    <h3>{dataSetState.isFinished ? "FINISHED" : "PLAYING"}</h3>
                 </Paper>
             </Grid2>
             {
-                !set.isFinished && 
+                isDetails && !dataSetState.isFinished && 
                 <Grid2 size={{ xs: 12, sm: 4 }} justifyContent="center" textAlign="center">
                     <Paper>
-                        <Button>
-                            +1 {set.team1}
+                        <Button onClick={async () => await updateScore("team1")}>
+                            +1 {dataSetState.team1}
                         </Button>
-                        <Button>
-                            +1 {set.team2}
+                        <Button onClick={async () => await updateScore("team2")}>
+                            +1 {dataSetState.team2}
                         </Button>
                     </Paper>
                 </Grid2>
             }
-            {
-                !set.isFinished && 
-                <Grid2 size={{ xs: 12, sm: 4 }} justifyContent="center" textAlign="center">
-                    <Button variant="contained">
-                        End game
-                    </Button>
-                </Grid2>
-            }
         </Grid2>
-
     )
 }

@@ -21,7 +21,7 @@ const Sets: React.FC<SetsProps> = ({ set }) => {
 
    return (
     <div>
-        <Set set={set}/>
+        <Set set={set} isDetails={true}/>
     </div>
    );
 };

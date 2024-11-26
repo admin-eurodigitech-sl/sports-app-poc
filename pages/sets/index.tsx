@@ -30,7 +30,7 @@ const Sets: React.FC<SetsProps> = ({ sets }) => {
             sets.map((set, index) => {
                 return (
                     <div onClick={()=> router.push(`/sets/${set._id}`)}>
-                        <Set set={set} key={index}/>
+                        <Set set={set} key={index} isDetails={false}/>
                     </div>
                 )
             })

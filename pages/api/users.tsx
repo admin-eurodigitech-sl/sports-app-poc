@@ -6,8 +6,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const db = client.db("volley");
   const collection = db.collection("users");
 
-  console.log(req);
-
   switch (req.method) {
     case "GET":
       const allSets = await collection.find({ }).toArray();
