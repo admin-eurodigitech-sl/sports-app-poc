@@ -47,7 +47,7 @@ const Sets: React.FC<SetsProps> = (props: Props) => {
     const isSetAlreadyInProgress = currentSet.length >= 1;
 
     const createGameHandler = async () => {
-        await fetch(`/api/sets`,
+        const res = await fetch(`/api/sets`,
             {
               body: JSON.stringify({
                 isFinished: false,
@@ -66,6 +66,9 @@ const Sets: React.FC<SetsProps> = (props: Props) => {
         const data = (await resGet.json()).data;
 
         setDataSets(data);
+
+        const id = (await res.json()).data.insertedId;
+        router.push(`/sets/${id}`)
     }
 
    return (
