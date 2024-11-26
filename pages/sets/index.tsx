@@ -6,6 +6,9 @@ import { Set } from "../../components/Set";
 import Grid2 from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
 
+import { CustomAppBar } from "@/components/CustomAppBar";
+
+
 interface Set {
    _id: string;
    team1: string;
@@ -20,7 +23,17 @@ interface SetsProps {
     sets: Set[];
 }
 
-const Sets: React.FC<SetsProps> = ({ sets }) => {
+interface Props {
+    /**
+     * Injected by the documentation to work in an iframe.
+     * You won't need it on your project.
+     */
+    window?: () => Window;
+    sets: Set[];
+}
+
+const Sets: React.FC<SetsProps> = (props: Props) => {
+    const { window, sets } = props;
     const [setsData, setDataSets] = useState(sets);
     const router = useRouter();
 
@@ -56,55 +69,59 @@ const Sets: React.FC<SetsProps> = ({ sets }) => {
     }
 
    return (
-    <div>
+    <>
+        <CustomAppBar  window={window}/>
         <div>
-            <Grid2 container spacing={2}  justifyContent="center">
-                <Grid2 justifyContent="center" textAlign="center">
-                    <h1>Current Set</h1>
+            <div>
+                <Grid2 container spacing={2}  justifyContent="center">
+                    <Grid2 justifyContent="center" textAlign="center">
+                        <h1>Current Set</h1>
 
-                    {
-                        !isSetAlreadyInProgress && 
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            onClick={createGameHandler}
-                        >
-                            New Set
-                        </Button>
-                    }
+                        {
+                            !isSetAlreadyInProgress && 
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                                onClick={createGameHandler}
+                            >
+                                New Set
+                            </Button>
+                        }
+                    </Grid2>
                 </Grid2>
+                {
+                    isSetAlreadyInProgress && currentSet
+                        .map((set, index) => {
+                            return (
+                                <div onClick={()=> router.push(`/sets/${set._id}`)} key={`currentSet-${index}`}>
+                                    <Set set={set} key={`currentSet-${index}`} isDetails={false}/>
+                                </div>
+                            )
+                        })
+                }
+
+            </div>
+
+            <Grid2 container spacing={2}  justifyContent="center">
+                    <Grid2 justifyContent="center" textAlign="center">
+                        <h1>Historical Sets</h1>
+                    </Grid2>
             </Grid2>
             {
-                isSetAlreadyInProgress && currentSet
+                setsData
+                    .filter((set) => set.isFinished)
                     .map((set, index) => {
                         return (
-                            <div onClick={()=> router.push(`/sets/${set._id}`)} key={`currentSet-${index}`}>
-                                <Set set={set} key={`currentSet-${index}`} isDetails={false}/>
+                            <div onClick={()=> router.push(`/sets/${set._id}`)} key={`historySet-${index}`}>
+                                <Set set={set} key={`historySet-${index}`} isDetails={false}/>
                             </div>
                         )
                     })
             }
-
         </div>
-
-        <Grid2 container spacing={2}  justifyContent="center">
-                <Grid2 justifyContent="center" textAlign="center">
-                    <h1>Historical Sets</h1>
-                </Grid2>
-        </Grid2>
-        {
-            setsData
-                .filter((set) => set.isFinished)
-                .map((set, index) => {
-                    return (
-                        <div onClick={()=> router.push(`/sets/${set._id}`)} key={`historySet-${index}`}>
-                            <Set set={set} key={`historySet-${index}`} isDetails={false}/>
-                        </div>
-                    )
-                })
-        }
-    </div>
+    </>
+    
    );
 };
 

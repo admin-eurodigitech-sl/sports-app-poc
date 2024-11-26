@@ -3,8 +3,10 @@ import { GetServerSideProps } from 'next';
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Grid2 from "@mui/material/Grid2";
+import Button from '@mui/material/Button';
+
+import { CustomAppBar } from "@/components/CustomAppBar";
 
 interface User {
    _id: string;
@@ -16,8 +18,18 @@ interface UsersProps {
     users: User[];
 }
 
+interface Props {
+  /**
+   * Injected by the documentation to work in an iframe.
+   * You won't need it on your project.
+   */
+  window?: () => Window;
+  users: User[];
+}
 
-const Login: React.FC<UsersProps> = ({ users }) => {
+const Login: React.FC<UsersProps> = (props: Props) => {
+    const { window, users } = props;
+
     const router = useRouter()
 
     useEffect(() => {
@@ -43,27 +55,31 @@ const Login: React.FC<UsersProps> = ({ users }) => {
       }
 
    return (
-    <Grid2 container spacing={2} justifyContent="center">
-      <Grid2 size={{ xs: 12, sm: 4 }} justifyContent="start">
-        <h1>Welcome to Sunday Volley</h1>
-        <form onSubmit={handleSubmit}>
-        <TextField
-          label="name"
-          name="name"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-        >
-          Access
-        </Button>
-      </form>
+    <>
+      <CustomAppBar  window={window}/>
+
+      <Grid2 container spacing={2} justifyContent="center">
+        <Grid2 size={{ xs: 12, sm: 4 }} justifyContent="start">
+          <h1>Welcome to Sunday Volley</h1>
+          <form onSubmit={handleSubmit}>
+          <TextField
+            label="name"
+            name="name"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+          >
+            Access
+          </Button>
+        </form>
+        </Grid2>
       </Grid2>
-    </Grid2>
+    </>
    );
 };
 
