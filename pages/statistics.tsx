@@ -2,9 +2,7 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react';
-import { Set } from "../../components/Set";
 import Grid2 from '@mui/material/Grid2';
-import Button from '@mui/material/Button';
 
 import { CustomAppBar } from "@/components/CustomAppBar";
 
