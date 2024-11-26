@@ -65,15 +65,17 @@ export const Set = ({ set, isDetails }: SetProps) => {
             </Grid2>
             {
                 isDetails && !dataSetState.isFinished && 
-                <Grid2 size={{ xs: 12, sm: 4 }} justifyContent="center" textAlign="center">
-                    <Paper>
+                <Grid2 size={{ xs: 12, sm: 4 }} spacing={2} textAlign="center">
+                    <Grid2 textAlign="center"> 
                         <Button onClick={async () => await updateScore("team1")}>
                             +1 {dataSetState.team1}
                         </Button>
+                        <Button>
+                        </Button>
                         <Button onClick={async () => await updateScore("team2")}>
                             +1 {dataSetState.team2}
-                        </Button>
-                    </Paper>
+                        </Button> 
+                    </Grid2>
                 </Grid2>
             }
         </Grid2>
