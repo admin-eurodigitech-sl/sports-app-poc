@@ -1,26 +1,11 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { CustomAppBar } from "@/components/CustomAppBar";
-import { GlobalStatistics } from "@/components/GlobalStatistics";
 import { DailyStatistics } from '@/components/DailyStatistics';
-
-
-interface Set {
-   _id: string;
-   team1: string;
-   team2: string;
-   score: string;
-   winner: string;
-   isFinished: boolean;
-    createdAt: string;
-}
-
-interface SetsProps {
-    sets: Set[];
-}
+import { ISet } from "@/components/Set";
 
 interface Props {
     /**
@@ -28,12 +13,11 @@ interface Props {
      * You won't need it on your project.
      */
     window?: () => Window;
-    sets: Set[];
+    sets: ISet[];
 }
 
-const DailyScore: React.FC<SetsProps> = (props: Props) => {
+const DailyScore: React.FC<Props> = (props: Props) => {
     const { window, sets } = props;
-    const [setsData, setDataSets] = useState(sets);
     const router = useRouter();
 
     useEffect(() => {
@@ -45,7 +29,7 @@ const DailyScore: React.FC<SetsProps> = (props: Props) => {
    return (
     <>
         <CustomAppBar  window={window}/>
-        <DailyStatistics setsData={setsData} />
+        <DailyStatistics setsData={sets} />
     </>
     
    );

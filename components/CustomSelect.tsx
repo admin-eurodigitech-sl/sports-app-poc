@@ -32,9 +32,9 @@ export function CustomSelect({ selectName, selectArray, selectLabel, useStateHoo
           onChange={handleChange}
         >
           {
-            selectArray.map(({ name, value }) => {
+            selectArray.map(({ name, value }, index) => {
               return (
-                <MenuItem value={value}>{name}</MenuItem>
+                <MenuItem value={value} key={`custom-select-item-${index}`}>{name}</MenuItem>
               )
             })
           }

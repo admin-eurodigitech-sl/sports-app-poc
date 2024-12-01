@@ -1,27 +1,13 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
-import { useEffect, useState } from 'react';
-import { Set } from "../../components/Set";
+import { useEffect } from 'react';
+import { Set, ISet } from "../../components/Set";
 import Grid2 from '@mui/material/Grid2';
-import Button from '@mui/material/Button';
 
 import { CustomAppBar } from "@/components/CustomAppBar";
+import { CreateNewGameButton } from "@/components/CreateNewGameButton";
 
-
-interface Set {
-   _id: string;
-   team1: string;
-   team2: string;
-   score: string;
-   winner: string;
-   isFinished: boolean;
-    createdAt: string;
-}
-
-interface SetsProps {
-    sets: Set[];
-}
 
 interface Props {
     /**
@@ -29,12 +15,11 @@ interface Props {
      * You won't need it on your project.
      */
     window?: () => Window;
-    sets: Set[];
+    sets: ISet[];
 }
 
-const Sets: React.FC<SetsProps> = (props: Props) => {
+const Sets: React.FC<Props> = (props: Props) => {
     const { window, sets } = props;
-    const [setsData, setDataSets] = useState(sets);
     const router = useRouter();
 
     useEffect(() => {
@@ -43,33 +28,10 @@ const Sets: React.FC<SetsProps> = (props: Props) => {
         !user && router.push('/');
     }, [])
 
-    const currentSet = setsData.filter((set) => !set.isFinished);
+    const currentSet = sets.filter((set) => !set.isFinished);
     const isSetAlreadyInProgress = currentSet.length >= 1;
 
-    const createGameHandler = async () => {
-        const res = await fetch(`/api/sets`,
-            {
-              body: JSON.stringify({
-                isFinished: false,
-                team1:  "Titanes",
-                team2: "Aldeanos",
-                score: "0-0",
-                winner: "",
-                createdAt: new Date().toString()
-              }),
-              method: 'POST'
-            }
-          );
 
-        const resGet = await fetch(`/api/sets`);
-        
-        const data = (await resGet.json()).data;
-
-        setDataSets(data);
-
-        const id = (await res.json()).data.insertedId;
-        router.push(`/sets/${id}`)
-    }
 
    return (
     <>
@@ -82,28 +44,21 @@ const Sets: React.FC<SetsProps> = (props: Props) => {
 
                         {
                             !isSetAlreadyInProgress && 
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                onClick={createGameHandler}
-                            >
-                                New Set
-                            </Button>
+                            <CreateNewGameButton />
                         }
                     </Grid2>
                 </Grid2>
+
                 {
                     isSetAlreadyInProgress && currentSet
                         .map((set, index) => {
                             return (
                                 <div onClick={()=> router.push(`/sets/${set._id}`)} key={`currentSet-${index}`}>
-                                    <Set set={set} key={`currentSet-${index}`} isDetails={false}/>
+                                    <Set set={set} key={`currentSet-${index}`} isDetails={false} isSetAlreadyInProgress={isSetAlreadyInProgress} />
                                 </div>
                             )
                         })
                 }
-
             </div>
 
             <Grid2 container spacing={2}  justifyContent="center">
@@ -112,12 +67,12 @@ const Sets: React.FC<SetsProps> = (props: Props) => {
                     </Grid2>
             </Grid2>
             {
-                setsData
+                sets
                     .filter((set) => set.isFinished)
                     .map((set, index) => {
                         return (
                             <div onClick={()=> router.push(`/sets/${set._id}`)} key={`historySet-${index}`}>
-                                <Set set={set} key={`historySet-${index}`} isDetails={false}/>
+                                <Set set={set} key={`historySet-${index}`} isDetails={false} isSetAlreadyInProgress={isSetAlreadyInProgress}/>
                             </div>
                         )
                     })

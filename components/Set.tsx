@@ -3,9 +3,11 @@ import Button from '@mui/material/Button';
 import Paper from "@mui/material/Paper";
 import Grid2 from '@mui/material/Grid2';
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router'
 
-interface Set {
+import { CreateNewGameButton } from "@/components/CreateNewGameButton";
+
+export interface ISet {
     _id: string;
     team1: string;
     team2: string;
@@ -16,19 +18,23 @@ interface Set {
  }
 
  interface SetProps {
-    set: Set;
+    set: ISet;
     isDetails: boolean;
+    isSetAlreadyInProgress: boolean;
 }
 
-export const Set = ({ set, isDetails }: SetProps) => {
+export const Set = ({ set, isDetails, isSetAlreadyInProgress }: SetProps) => {
     const [dataSetState, setDataSetState] = useState(set);
     const router = useRouter();
+
+    console.log("isDetails", isDetails)
+    console.log("isSetAlreadyInProgress",isSetAlreadyInProgress);
 
     const LoadWinner = (winner: string, team: string) => {
         return winner === team ? <strong style={{color: "red"}}>{team}</strong> : <span>{team}</span>
     }
 
-    const deleteSet = async (dataSetState: Set) => {
+    const deleteSet = async (dataSetState: ISet) => {
         await fetch(`/api/sets/${dataSetState._id}`,
             {
               method: 'DELETE'
@@ -64,7 +70,6 @@ export const Set = ({ set, isDetails }: SetProps) => {
             );
 
         const updatedData = (await res.json()).data;
-        console.log(updatedData);
         setDataSetState(updatedData);
     }
 
@@ -112,6 +117,15 @@ export const Set = ({ set, isDetails }: SetProps) => {
                         <Button onClick={async () => await updateScore("team2", "rest", 1)}>
                             -1 {dataSetState.team2}
                         </Button> 
+                    </Grid2>
+                </Grid2>
+            }
+
+            {
+                isDetails && dataSetState.isFinished && !isSetAlreadyInProgress &&
+                <Grid2 size={{ xs: 12, sm: 4 }} container spacing={2} justifyContent="center" textAlign="center">
+                    <Grid2 justifyContent="center" textAlign="center"> 
+                        <CreateNewGameButton />
                     </Grid2>
                 </Grid2>
             }

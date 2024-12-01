@@ -1,24 +1,9 @@
 import { GetServerSideProps } from 'next';
-import { Set } from "../../components/Set";
+import { Set, ISet } from "../../components/Set";
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import { useEffect } from 'react';
 import { CustomAppBar } from "@/components/CustomAppBar";
-
-interface Set {
-   _id: string;
-   team1: string;
-   team2: string;
-   score: string;
-   winner: string;
-   isFinished: boolean;
-    createdAt: string;
-}
-
-
-interface SetsProps {
-    set: Set;
-}
 
 interface Props {
     /**
@@ -26,12 +11,13 @@ interface Props {
      * You won't need it on your project.
      */
     window?: () => Window;
-    set: Set;
+    set: ISet;
+    setInProgress: boolean;
 }
 
 
 const SetDetails: React.FC<Props> = (props: Props) => {
-    const { window, set } = props;
+    const { window, set, setInProgress } = props;
     const router = useRouter();
 
     useEffect(() => {
@@ -44,7 +30,7 @@ const SetDetails: React.FC<Props> = (props: Props) => {
     <div>
         <CustomAppBar  window={window}/>
         <div>
-            <Set set={set} isDetails={true}/>
+            <Set set={set} isDetails={true} isSetAlreadyInProgress={setInProgress}/>
         </div>
     </div>
 
@@ -64,15 +50,26 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
           "Content-Type": "application/json",
         },
       });
+
+      let setInProgressRes = await fetch(`${process.env.API_ENDPOINT}/api/sets/in-progress`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+
       let set = await res.json();
+      let setInProgress = await setInProgressRes.json();
 
        return {
            props: { 
-            set: JSON.parse(JSON.stringify(set.data))
+            set: JSON.parse(JSON.stringify(set.data)),
+            setInProgress: setInProgress.data.length !== 0
          },
        };
    } catch (e) {
        console.error(e);
-       return { props: { set: {} } };
+       return { props: { set: {} }, setInProgress: false };
    }
 };

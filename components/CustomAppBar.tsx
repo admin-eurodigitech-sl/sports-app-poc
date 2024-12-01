@@ -23,6 +23,7 @@ interface Props {
 }
 const drawerWidth = 240;
 const navItems = ['', 'Sets', 'Daily Score', 'Global Score'];
+
 export const CustomAppBar = (props: Props) => {
     const { window } = props;
     const router = useRouter()
@@ -74,7 +75,7 @@ export const CustomAppBar = (props: Props) => {
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                 {navItems.map((item) => (
-                <Button key={item} sx={{ color: '#fff' }}>
+                <Button key={item} sx={{ color: '#fff' }} onClick={() => router.push(`/${item.toLowerCase().split(" ").join("-")}`)}>
                     {item}
                 </Button>
                 ))}
