@@ -22,7 +22,7 @@ interface Props {
     window?: () => Window;
 }
 const drawerWidth = 240;
-const navItems = ['', 'Sets', 'Statistics'];
+const navItems = ['', 'Sets', 'Daily Score', 'Global Score'];
 export const CustomAppBar = (props: Props) => {
     const { window } = props;
     const router = useRouter()
@@ -42,7 +42,7 @@ export const CustomAppBar = (props: Props) => {
             {navItems.map((item) => (
               <ListItem key={item} disablePadding>
                 <ListItemButton sx={{ textAlign: 'center' }}>
-                  <ListItemText primary={item} onClick={() => router.push(`/${item.toLowerCase()}`)}/>
+                  <ListItemText primary={item} onClick={() => router.push(`/${item.toLowerCase().split(" ").join("-")}`)}/>
                 </ListItemButton>
               </ListItem>
             ))}

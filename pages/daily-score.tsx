@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { CustomAppBar } from "@/components/CustomAppBar";
 import { GlobalStatistics } from "@/components/GlobalStatistics";
+import { DailyStatistics } from '@/components/DailyStatistics';
 
 
 interface Set {
@@ -30,7 +31,7 @@ interface Props {
     sets: Set[];
 }
 
-const Statistics: React.FC<SetsProps> = (props: Props) => {
+const DailyScore: React.FC<SetsProps> = (props: Props) => {
     const { window, sets } = props;
     const [setsData, setDataSets] = useState(sets);
     const router = useRouter();
@@ -44,14 +45,14 @@ const Statistics: React.FC<SetsProps> = (props: Props) => {
    return (
     <>
         <CustomAppBar  window={window}/>
-        <GlobalStatistics  setsData={setsData} />
+        <DailyStatistics setsData={setsData} />
     </>
     
    );
 };
 
 
-export default Statistics;
+export default DailyScore;
 
 
 export const getServerSideProps: GetServerSideProps = async () => {

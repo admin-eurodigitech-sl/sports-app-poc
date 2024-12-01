@@ -25,7 +25,7 @@ export const GlobalStatistics = (props: GlobalStatisticsProps) => {
         <div>
             <Grid2 container spacing={2}  justifyContent="center">
                     <Grid2 justifyContent="center" textAlign="center">
-                        <h1>Total Sets</h1>
+                        <h1>Global Score</h1>
                     </Grid2>
             </Grid2>
 

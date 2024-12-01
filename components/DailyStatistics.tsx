@@ -1,5 +1,10 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
+
 import Grid2 from '@mui/material/Grid2';
+
+import { CustomSelect } from "@/components/CustomSelect";
+import { onlyUnique, parseCreatedAtToDate } from "@/lib/helper";
 
 interface Set {
     _id: string;
@@ -17,17 +22,38 @@ interface DailyStatisticsProps {
 
 export const DailyStatistics = (props: DailyStatisticsProps) => {
     const { setsData } = props;
-    const titanesWins = setsData.filter((set) => set.winner === "Titanes").length;
-    const aldeanosWins = setsData.filter((set) => set.winner === "Aldeanos").length;
-    const totalPlays = setsData.length;
+    const [dateFilter, setDateFilter] = useState("");
+    const [filteredSet, setFilteredSet] = useState(setsData);
 
-    const allAvailableDays = setsData.map((set) => set.createdAt)
+    const titanesWins = filteredSet.filter((set) => set.winner === "Titanes").length;
+    const aldeanosWins = filteredSet.filter((set) => set.winner === "Aldeanos").length;
+    const totalPlays = filteredSet.length;
+    const allUniqueDates = setsData
+        .map((set) => parseCreatedAtToDate(set.createdAt))
+        .filter(onlyUnique)
+        .map((date) => {
+            return {
+                name: date,
+                value: date,
+            }
+        })
+
+    useEffect(() => {
+        const newFilteredSet = setsData.filter((set) => parseCreatedAtToDate(set.createdAt) === dateFilter);
+        setFilteredSet(newFilteredSet);
+    }, [dateFilter])
 
     return (
         <div>
             <Grid2 container spacing={2}  justifyContent="center">
                     <Grid2 justifyContent="center" textAlign="center">
-                        <h1>Total Sets</h1>
+                        <h1>Daily Score</h1>
+                    </Grid2>
+            </Grid2>
+
+            <Grid2 container spacing={1} justifyContent="center">
+                    <Grid2 justifyContent="center" textAlign="center">
+                        <CustomSelect selectName={"Date"} selectArray={allUniqueDates} selectLabel={"Date"} useStateHook={setDateFilter}/>
                     </Grid2>
             </Grid2>
 
