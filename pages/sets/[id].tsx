@@ -3,6 +3,7 @@ import { Set } from "../../components/Set";
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import { useEffect } from 'react';
+import { CustomAppBar } from "@/components/CustomAppBar";
 
 interface Set {
    _id: string;
@@ -19,8 +20,18 @@ interface SetsProps {
     set: Set;
 }
 
+interface Props {
+    /**
+     * Injected by the documentation to work in an iframe.
+     * You won't need it on your project.
+     */
+    window?: () => Window;
+    set: Set;
+}
 
-const Sets: React.FC<SetsProps> = ({ set }) => {
+
+const SetDetails: React.FC<Props> = (props: Props) => {
+    const { window, set } = props;
     const router = useRouter();
 
     useEffect(() => {
@@ -31,13 +42,17 @@ const Sets: React.FC<SetsProps> = ({ set }) => {
 
    return (
     <div>
-        <Set set={set} isDetails={true}/>
+        <CustomAppBar  window={window}/>
+        <div>
+            <Set set={set} isDetails={true}/>
+        </div>
     </div>
+
    );
 };
 
 
-export default Sets;
+export default SetDetails;
 
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {

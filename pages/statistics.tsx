@@ -2,9 +2,9 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react';
-import Grid2 from '@mui/material/Grid2';
 
 import { CustomAppBar } from "@/components/CustomAppBar";
+import { GlobalStatistics } from "@/components/GlobalStatistics";
 
 
 interface Set {
@@ -41,43 +41,10 @@ const Statistics: React.FC<SetsProps> = (props: Props) => {
         !user && router.push('/');
     }, [])
 
-    const titanesWins = setsData.filter((set) => set.winner === "Titanes").length;
-    const aldeanosWins = setsData.filter((set) => set.winner === "Aldeanos").length;
-    const totalPlays = setsData.length;
-
    return (
     <>
         <CustomAppBar  window={window}/>
-        <div>
-
-            <Grid2 container spacing={2}  justifyContent="center">
-                    <Grid2 justifyContent="center" textAlign="center">
-                        <h1>Total Sets</h1>
-                    </Grid2>
-            </Grid2>
-
-            <Grid2 container spacing={1} justifyContent="center">
-                    <Grid2 justifyContent="center" textAlign="center">
-                        <h1>{totalPlays}</h1>
-                    </Grid2>
-            </Grid2>
-
-            <Grid2 container spacing={2}  justifyContent="center">
-                    <Grid2 justifyContent="center" textAlign="center">
-                        <h1>Win rate</h1>
-                    </Grid2>
-            </Grid2>
-
-            <Grid2 container spacing={1} justifyContent="center">
-                    <Grid2 justifyContent="center" textAlign="center">
-                        <h2>Titanes: {(Math.ceil((titanesWins/totalPlays) * 100))}% </h2>
-                    </Grid2>
-                    <Grid2 justifyContent="center" textAlign="center">
-                        <h2>Aldeanos: {(Math.ceil((aldeanosWins/totalPlays) * 100)) - 1}%</h2>
-                    </Grid2>
-            </Grid2>
-            
-        </div>
+        <GlobalStatistics  setsData={setsData} />
     </>
     
    );

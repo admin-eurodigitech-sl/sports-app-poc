@@ -41,7 +41,6 @@ export const Set = ({ set, isDetails }: SetProps) => {
     const updateScore = async (team: string, operator: string, quantity: number) => {
         let [team1Score, team2Score] = dataSetState.score.split('-');
 
-
         if (operator === "sum") {
             if (team === "team1") team1Score = `${parseInt(team1Score) + quantity}`;
             if (team === "team2") team2Score = `${parseInt(team2Score) + quantity}`;

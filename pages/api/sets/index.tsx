@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.json({ status: 200, data: mySet });
       break;
     case "GET":
-      const allSets = await collection.find({}).toArray();
+      const allSets = await collection.find({}).sort({ createdAt: -1 }).toArray();
       res.json({ status: 200, data: allSets });
       break;
   }
